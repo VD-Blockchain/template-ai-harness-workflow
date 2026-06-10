@@ -79,10 +79,10 @@ app.get('/api/waitlist/count', async (_q, res) =>
   res.json({ count: Number((await pool.query('SELECT count(*) FROM waitlist')).rows[0].count) }));
 ```
 **Steps:**
-- [ ] Create branch `feature/chainpay-landing-waitlist` off `main`.
-- [ ] Write `package.json`, `db.js`, `validate.js`, `server.js`, `.dockerignore` (ignore `node_modules`).
-- [ ] `cd waitlist && npm install` → lockfile + deps resolve with no error.
-- [ ] Verify — `cd waitlist && node -e "import('./src/validate.js').then(m=>{for(const[e,x]of[['a@b.com',true],['abc',false],['a@b',false],['',false]])if(m.isValidEmail(e)!==x)throw new Error(e)});"` → exits 0 (no output = all pass).
+- [x] Create branch `feature/chainpay-landing-waitlist` off `main`.
+- [x] Write `package.json`, `db.js`, `validate.js`, `server.js`, `.dockerignore` (ignore `node_modules`).
+- [x] `cd waitlist && npm install` → lockfile + deps resolve with no error.
+- [x] Verify — `cd waitlist && node -e "import('./src/validate.js').then(m=>{for(const[e,x]of[['a@b.com',true],['abc',false],['a@b',false],['',false]])if(m.isValidEmail(e)!==x)throw new Error(e)});"` → exits 0 (no output = all pass).
 
 #### Task A2: Backend unit tests + Dockerfile
 **Files (create):** `waitlist/test/validate.test.js`, `waitlist/Dockerfile`
@@ -90,8 +90,8 @@ app.get('/api/waitlist/count', async (_q, res) =>
 - `validate.test.js`: `node --test` cases — valid emails accepted, `abc`/`a@b`/empty/whitespace rejected, mixed-case normalized.
 - `Dockerfile`: `FROM node:24-alpine`, `WORKDIR /app`, copy `package*.json`, `npm ci --omit=dev`, copy `src`, `EXPOSE 8080`, `CMD ["node","src/server.js"]`. (busybox `wget` is present in alpine for the compose healthcheck.)
 **Steps:**
-- [ ] Write `test/validate.test.js` and `Dockerfile`.
-- [ ] Verify — `cd waitlist && npm test` → `node --test` reports all tests passing, exit 0.
+- [x] Write `test/validate.test.js` and `Dockerfile`.
+- [x] Verify — `cd waitlist && npm test` → `node --test` reports all tests passing, exit 0.
 
 ---
 

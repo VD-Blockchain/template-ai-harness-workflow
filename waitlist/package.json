@@ -1,0 +1,15 @@
+{
+  "name": "chainpay-waitlist",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ChainPay waitlist API — stores unique email signups in Postgres.",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}
