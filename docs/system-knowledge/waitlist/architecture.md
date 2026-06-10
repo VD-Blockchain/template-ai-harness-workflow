@@ -4,8 +4,11 @@
 
 Node 24 + Express (ESM) REST API backed by Postgres 16.
 
-- `waitlist/src/server.js` — Express app, routes, JSON body parsing, boot sequence
-  (init DB, then listen on `PORT` / default 8080).
+- `waitlist/src/app.js` — Express app factory: security headers, JSON body parsing
+  (10kb limit), routes, `asyncHandler` wrapper, and the centralized error middleware.
+  Exports `createApp()` + `app` (importable without DB side-effects, used by tests).
+- `waitlist/src/server.js` — thin bootstrap: process-level rejection/exception guards,
+  `init()` the DB, then `app.listen(PORT)` (default 8080).
 - `waitlist/src/db.js` — `pg` connection Pool from `DATABASE_URL`; `init()` retries the
   connection (~10× / 2s) and runs an idempotent `CREATE TABLE IF NOT EXISTS`.
 - `waitlist/src/validate.js` — pure `isValidEmail(s)` (trim + lowercase + single regex
@@ -17,9 +20,10 @@ Node 24 + Express (ESM) REST API backed by Postgres 16.
 ### REST endpoints
 | Method | Path | Purpose | Evidence |
 |---|---|---|---|
-| POST | /api/waitlist | Submit signup; 201 created / 200 already_registered / 400 invalid_email | waitlist/src/server.js |
-| GET | /api/waitlist/count | Public total signup count `{count:int}` | waitlist/src/server.js |
-| GET | /health | Container healthcheck `{ok:true}` (not proxied) | waitlist/src/server.js |
+| POST | /api/waitlist | Submit signup; 201 created / 200 already_registered / 400 invalid_email (non-string email also → 400) | waitlist/src/app.js |
+| GET | /api/waitlist/count | Public total signup count `{count:int}` | waitlist/src/app.js |
+| GET | /health | Container healthcheck `{ok:true}` (not proxied) | waitlist/src/app.js |
+| (errors) | any | Malformed/oversized JSON → 400 `{error:"bad_request"}`; unexpected → 500 `{error:"internal_error"}` — generic, no stack/paths | waitlist/src/app.js |
 
 ### Events / queues
 None.
@@ -47,6 +51,12 @@ None.
 - **Boot-time retry loop** — Postgres may still be starting; `depends_on: service_healthy`
   plus retries makes boot robust. (Origin: spec-2026-06-10-chainpay-landing-waitlist.md)
 - **Email-only, server-validated** — lowest signup friction; never trust the client.
+- **Strict non-string rejection + no-crash error handling** — `typeof email !== 'string'`
+  is rejected 400 before any coercion (a non-callable `toString` would otherwise make
+  `String()` throw); `asyncHandler` + error middleware + process guards guarantee no
+  request can take the process down. (Origin: Tester Round 1 — DoS/type-confusion fix.)
+- **Generic error bodies + security headers** — no stack traces/paths/versions leaked;
+  `x-powered-by` disabled; `nosniff`/`X-Frame-Options:DENY`/CSP/`Referrer-Policy` set.
 
 ## Known Gotchas
 

@@ -48,6 +48,9 @@ None (no datastore).
   Resolves the spec's open question. (Origin: spec-2026-06-10-chainpay-landing-waitlist.md)
 - **Static build + nginx** (not a Node SSR server) — marketing page is fully static;
   cheapest, fastest, simplest to serve.
+- **nginx security hardening** — `server_tokens off` (hide version) plus
+  `X-Frame-Options:DENY`, `X-Content-Type-Options:nosniff`, `Referrer-Policy`, and a
+  same-origin `Content-Security-Policy` on the served page. (Origin: Tester Round 1.)
 
 ## Known Gotchas
 

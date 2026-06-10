@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: chainpay
       POSTGRES_PASSWORD: chainpay
@@ -15,6 +16,7 @@ services:
 
   waitlist:
     build: ./waitlist
+    restart: unless-stopped
     environment:
       DATABASE_URL: "postgres://chainpay:chainpay@db:5432/waitlist"
       PORT: "8080"
@@ -33,6 +35,7 @@ services:
 
   landing:
     build: ./landing
+    restart: unless-stopped
     depends_on:
       - waitlist
     ports:

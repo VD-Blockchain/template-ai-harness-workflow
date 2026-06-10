@@ -214,3 +214,16 @@ volumes: { pgdata: {} }
 - [x] Verify docs — `grep -L 'GREENFIELD PLACEHOLDER' docs/system-knowledge/srs.md docs/system-knowledge/architecture.md` → both listed (placeholder removed); `test -f docs/system-knowledge/waitlist/architecture.md && test -f docs/system-knowledge/landing/srs.md` → exit 0.
 - [x] Verify demo — `bash scripts/demo-chainpay.sh` → prints the human spot-check steps without error.
 - [x] Final: confirm every acceptance criterion 1–10 maps to a passing verification above. (AC1–3,9 → Epic C deploy/health/page checks; AC4–7 → Epic C signup/count/validation curls + Epic A validate/tests; AC8 → Epic C persistence check; AC10 → Epic D docs — verified. The deploy/e2e executions in Epic C are owned by DevOps/Tester per the team role split.)
+
+---
+
+### Tester Round 1 — bug fixes (post-deploy)
+
+Root-caused and fixed 4 issues; locked with automated regression tests. Verify: `cd waitlist && npm test` → 10/10 pass; `cd landing && npm run build` → exit 0 + `npm test` → 8/8; `docker compose config` valid; `nginx -t` on `landing/nginx.conf` → syntax ok.
+
+- [x] **#1 BLOCKER — remote DoS via type-confusion crash.** Root cause: async POST handler did `String(req.body?.email …)` *outside* try/catch; `String({toString:"…"})` throws TypeError → unhandled rejection → Node 24 `exit(1)` → service Exited, all `/api/*` 502. Fix: strict `typeof email !== 'string'` → 400 *before* any coercion (`waitlist/src/app.js`); `asyncHandler` wrapper + centralized error middleware so no request can crash the process; `process.on(unhandledRejection/uncaughtException)` guards in `server.js`; `restart: unless-stopped` on all compose services. Regression: `object email → 400 (no crash)` + `survives a barrage` tests.
+- [x] **#2 MAJOR — validation bypass (array email → 201 row).** Same strict string-type check rejects arrays/objects/numbers with 400, no row. Regression: `array email → 400` test.
+- [x] **#3 MAJOR — info disclosure (Express stack traces on malformed JSON).** Error middleware returns generic `{error:"bad_request"|"internal_error"}`, no stack/paths/versions. Regression: `malformed JSON → 400 generic, no stack/file paths` test.
+- [x] **#4 MINOR — security headers + version disclosure.** `app.disable('x-powered-by')` + `X-Content-Type-Options`, `X-Frame-Options`, CSP, `Referrer-Policy` on API; `server_tokens off` + the same headers + a page CSP in `landing/nginx.conf`. Regression: `security headers present, no X-Powered-By` test.
+
+> Non-bug note carried from Tester: AC3 (pixel-exact 375px render) was a sandbox coverage gap, not a failure; CSS audit clean — no layout change made.
