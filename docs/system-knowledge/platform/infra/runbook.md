@@ -57,7 +57,9 @@ Rules:
 
 | Service | Port(s) | Smoke URL | Notes |
 |---|---|---|---|
-| _(none yet)_ | | | |
+| landing | 3000→80 | http://localhost:3000/ | React/Vite SPA served by nginx; reverse-proxies `/api/*` → waitlist. |
+| waitlist | 8080→8080 | http://localhost:8080/health | Express + pg API; needs `db` healthy first (`depends_on: service_healthy`). |
+| db | 5432 (internal) | _(no smoke; healthcheck `pg_isready`)_ | Postgres 16; named volume `pgdata` persists signups. Not host-published. |
 
 ## Verify the whole system
 

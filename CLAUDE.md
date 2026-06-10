@@ -31,7 +31,9 @@ touching code.**
 
 | Service | Purpose | Knowledge node |
 |---|---|---|
-| _(none yet — greenfield)_ | | |
+| landing | Vietnamese ChainPay marketing SPA (React/Vite + nginx, :3000); reverse-proxies `/api/*` | `docs/system-knowledge/landing/` |
+| waitlist | Express + Postgres signup API (:8080) — validate, dedup, public count | `docs/system-knowledge/waitlist/` |
+| db | Postgres 16 datastore for the `waitlist` table (internal :5432) | `docs/system-knowledge/waitlist/` |
 
 > Every new service adds: a row here, a node under `docs/system-knowledge/<service>/`
 > (templates in `docs/system-knowledge/_meta/`), an entry in `docker-compose.yml`,
