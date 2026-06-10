@@ -184,12 +184,12 @@ volumes: { pgdata: {} }
 ```
 **Steps:**
 - [x] Write `docker-compose.yml`; `docker compose config` → valid, lists `db waitlist landing`.
-- [ ] Deploy in dependency order: `scripts/deploy-service.sh db local` → `... waitlist local` → `... landing local`, each prints `DEPLOYED`.
-- [ ] Verify health — `docker compose ps` → all three `running`/`healthy`, no restarts (AC #9).
-- [ ] Verify signup + count — `C=$(curl -s localhost:3000/api/waitlist/count|grep -o '[0-9]\+'); curl -s -X POST localhost:3000/api/waitlist -H 'content-type: application/json' -d '{"email":"a@b.com"}'` → `{"status":"created"}`; re-POST same → `{"status":"already_registered"}`; `curl -s localhost:3000/api/waitlist/count` → count == `C+1` (AC #4,6,7, and proxy works).
-- [ ] Verify validation — `curl -s -o /dev/null -w '%{http_code}' -X POST localhost:3000/api/waitlist -H 'content-type: application/json' -d '{"email":"abc"}'` → `400` (AC #5).
-- [ ] Verify persistence — `docker compose restart waitlist db`; wait healthy; re-POST `a@b.com` → `already_registered`; count unchanged (AC #8).
-- [ ] Verify page — open `http://localhost:3000/` → 200, Vietnamese ChainPay page with all sections renders (AC #1,2); manually check at 375px width — no horizontal scroll (AC #3).
+- [x] Deploy in dependency order: `scripts/deploy-service.sh db local` → `... waitlist local` → `... landing local`, each prints `DEPLOYED`. _(devops, round 2)_
+- [x] Verify health — `docker compose ps` → all three `running`/`healthy`, no restarts (AC #9). _(devops + tester-r2)_
+- [x] Verify signup + count — `C=$(curl -s localhost:3000/api/waitlist/count|grep -o '[0-9]\+'); curl -s -X POST localhost:3000/api/waitlist -H 'content-type: application/json' -d '{"email":"a@b.com"}'` → `{"status":"created"}`; re-POST same → `{"status":"already_registered"}`; `curl -s localhost:3000/api/waitlist/count` → count == `C+1` (AC #4,6,7, and proxy works). _(tester-r2: count 2→3→4→5→6)_
+- [x] Verify validation — `curl -s -o /dev/null -w '%{http_code}' -X POST localhost:3000/api/waitlist -H 'content-type: application/json' -d '{"email":"abc"}'` → `400` (AC #5). _(tester-r2)_
+- [x] Verify persistence — `docker compose restart waitlist db`; wait healthy; re-POST `a@b.com` → `already_registered`; count unchanged (AC #8). _(tester-r2: count survived 5)_
+- [x] Verify page — open `http://localhost:3000/` → 200, Vietnamese ChainPay page with all sections renders (AC #1,2); manually check at 375px width — no horizontal scroll (AC #3). _(tester-r2: real browser @375px, scrollWidth==375)_
 
 ---
 
