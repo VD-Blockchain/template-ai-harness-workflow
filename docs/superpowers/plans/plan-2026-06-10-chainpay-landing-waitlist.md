@@ -124,9 +124,9 @@ async function onSubmit(e){ e.preventDefault();
 }
 ```
 **Steps:**
-- [ ] Scaffold Vite React app + all section components with Vietnamese copy.
-- [ ] `cd landing && npm install` → deps resolve.
-- [ ] Verify — `cd landing && npm run build` → `dist/` produced, exit 0, no build errors.
+- [x] Scaffold Vite React app + all section components with Vietnamese copy.
+- [x] `cd landing && npm install` → deps resolve.
+- [x] Verify — `cd landing && npm run build` → `dist/` produced, exit 0, no build errors.
 
 #### Task B2: Frontend tests + multi-stage Dockerfile + nginx /api proxy
 **Files (create):** `landing/src/api.test.js` (or `validate` util test), `landing/Dockerfile`, `landing/nginx.conf`, `landing/.dockerignore`
@@ -144,8 +144,8 @@ server {
 }
 ```
 **Steps:**
-- [ ] Write Vitest test, `nginx.conf`, multi-stage `Dockerfile`, `.dockerignore`.
-- [ ] Verify — `cd landing && npm test` → Vitest passes, exit 0.
+- [x] Write Vitest test, `nginx.conf`, multi-stage `Dockerfile`, `.dockerignore`.
+- [x] Verify — `cd landing && npm test` → Vitest passes, exit 0.
 
 ---
 
