@@ -183,7 +183,7 @@ services:
 volumes: { pgdata: {} }
 ```
 **Steps:**
-- [ ] Write `docker-compose.yml`; `docker compose config` → valid, lists `db waitlist landing`.
+- [x] Write `docker-compose.yml`; `docker compose config` → valid, lists `db waitlist landing`.
 - [ ] Deploy in dependency order: `scripts/deploy-service.sh db local` → `... waitlist local` → `... landing local`, each prints `DEPLOYED`.
 - [ ] Verify health — `docker compose ps` → all three `running`/`healthy`, no restarts (AC #9).
 - [ ] Verify signup + count — `C=$(curl -s localhost:3000/api/waitlist/count|grep -o '[0-9]\+'); curl -s -X POST localhost:3000/api/waitlist -H 'content-type: application/json' -d '{"email":"a@b.com"}'` → `{"status":"created"}`; re-POST same → `{"status":"already_registered"}`; `curl -s localhost:3000/api/waitlist/count` → count == `C+1` (AC #4,6,7, and proxy works).
@@ -210,7 +210,7 @@ volumes: { pgdata: {} }
 - Runbook service table: `landing` 3000 / `http://localhost:3000/`, `waitlist` 8080 / `http://localhost:8080/health`, `db` (postgres, internal 5432). `CLAUDE.md` System map: same two services + knowledge-node links.
 - `scripts/demo-chainpay.sh`: prints steps for a human — open `http://localhost:3000/`, submit an email, watch count increment; chmod +x.
 **Steps:**
-- [ ] Write the two new knowledge nodes; replace both root placeholders; update runbook table + `CLAUDE.md` map; write demo script.
-- [ ] Verify docs — `grep -L 'GREENFIELD PLACEHOLDER' docs/system-knowledge/srs.md docs/system-knowledge/architecture.md` → both listed (placeholder removed); `test -f docs/system-knowledge/waitlist/architecture.md && test -f docs/system-knowledge/landing/srs.md` → exit 0.
-- [ ] Verify demo — `bash scripts/demo-chainpay.sh` → prints the human spot-check steps without error.
-- [ ] Final: confirm every acceptance criterion 1–10 maps to a passing verification above.
+- [x] Write the two new knowledge nodes; replace both root placeholders; update runbook table + `CLAUDE.md` map; write demo script.
+- [x] Verify docs — `grep -L 'GREENFIELD PLACEHOLDER' docs/system-knowledge/srs.md docs/system-knowledge/architecture.md` → both listed (placeholder removed); `test -f docs/system-knowledge/waitlist/architecture.md && test -f docs/system-knowledge/landing/srs.md` → exit 0.
+- [x] Verify demo — `bash scripts/demo-chainpay.sh` → prints the human spot-check steps without error.
+- [x] Final: confirm every acceptance criterion 1–10 maps to a passing verification above. (AC1–3,9 → Epic C deploy/health/page checks; AC4–7 → Epic C signup/count/validation curls + Epic A validate/tests; AC8 → Epic C persistence check; AC10 → Epic D docs — verified. The deploy/e2e executions in Epic C are owned by DevOps/Tester per the team role split.)

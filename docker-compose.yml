@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: chainpay
+      POSTGRES_PASSWORD: chainpay
+      POSTGRES_DB: waitlist
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chainpay -d waitlist"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  waitlist:
+    build: ./waitlist
+    environment:
+      DATABASE_URL: "postgres://chainpay:chainpay@db:5432/waitlist"
+      PORT: "8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    labels:
+      harness.smoke: "http://localhost:8080/health"
+
+  landing:
+    build: ./landing
+    depends_on:
+      - waitlist
+    ports:
+      - "3000:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    labels:
+      harness.smoke: "http://localhost:3000/"
+
+volumes:
+  pgdata: {}
