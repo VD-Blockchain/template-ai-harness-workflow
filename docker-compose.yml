@@ -38,7 +38,10 @@ services:
     ports:
       - "3000:80"
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
+      # Use 127.0.0.1, not localhost: nginx binds IPv4-only (0.0.0.0:80), but
+      # `localhost` resolves to ::1 (IPv6) first inside the container → wget gets
+      # connection refused → perpetual unhealthy. See runbook troubleshooting.
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/"]
       interval: 5s
       timeout: 3s
       retries: 10

@@ -39,7 +39,9 @@ services:
     ports:
       - "3000:80"
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
+      # Use 127.0.0.1, NOT localhost — nginx binds IPv4-only; localhost→::1 first
+      # inside the container → connection refused → perpetual unhealthy.
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -77,6 +79,7 @@ docker compose logs --since 5m    # no error storms
 | Stale build (old code keeps running) | `docker compose build --no-cache <svc> && docker compose up -d --force-recreate <svc>` |
 | Container restart loop | `docker compose logs <svc>` — boot crash is code-level → back to Developer with logs. |
 | Healthcheck always `starting` | The check tool may not exist in the image (alpine has wget, not curl). Fix the check, not the app. |
+| Healthcheck `unhealthy` but host smoke returns 2xx (esp. nginx) | The in-container check targets `localhost`, which resolves to IPv6 `::1` first; nginx binds IPv4-only (`0.0.0.0:80`) → wget gets "connection refused". Fix: point the healthcheck at `http://127.0.0.1:<port>/` (not `localhost`), then `docker compose up -d --force-recreate <svc>`. Verified 2026-06-10 on `landing`. App code is fine — do NOT bounce to Developer. |
 | Compose file missing | First service not registered yet — Developer must create `docker-compose.yml` per the conventions above. |
 
 ## Adding a new environment (when the project outgrows local)
