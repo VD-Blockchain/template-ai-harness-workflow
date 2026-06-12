@@ -44,6 +44,11 @@ scripts/
 CLAUDE.md                   ← luật của repo mà mọi agent phải theo
 ```
 
+## Các nhánh (Branches)
+
+- **`main`**: Chứa phần boilerplate code thuần túy, là điểm khởi đầu cho một dự án mới.
+- **`done-harness`**: Chứa kết quả hoàn chỉnh sau khi chạy thành công toàn bộ ví dụ mẫu trong `demo-walkthrough`. Bạn có thể tham khảo nhánh này để xem ví dụ thực tế một dự án đã được AI harness xử lý sẽ trông như thế nào.
+
 ## Yêu cầu
 
 - [Claude Code](https://claude.com/claude-code) (CLI hoặc desktop app)
