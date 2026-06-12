@@ -1,4 +1,4 @@
-# blockchain-template-harness-ai
+# template-harness-ai-workflow
 
 Boilerplate **AI delivery harness** cho Claude Code: mọi feature / bug / enhancement đi
 qua 3 bước chuẩn hoá bằng slash command, với artifact rõ ràng ở từng bước và một team
@@ -54,7 +54,7 @@ CLAUDE.md                   ← luật của repo mà mọi agent phải theo
 ## Quickstart (5 phút)
 
 ```bash
-git clone <repo-url> && cd blockchain-template-harness-ai
+git clone <repo-url> && cd template-harness-ai-workflow
 docker info        # docker phải đang chạy
 claude             # mở Claude Code tại repo root
 ```
@@ -67,6 +67,9 @@ Trong Claude Code, chạy thử flow đầu tiên:
 
 → trả lời các câu hỏi → approve spec → `/write-plan <spec>` → approve plan →
 `/team-code-feature <plan>` → mở http://localhost:3000 chiêm nghiệm kết quả.
+
+> [!TIP]
+> **Lưu ý:** Lệnh `/team-code-feature` nên được chạy trong **tmux** để có thể nhìn thấy được các agent riêng lẻ đang làm việc ở các pane khác nhau và có thể chat với từng agent teammate nếu cần.
 
 **Hướng dẫn từng bước chi tiết (nên đọc lần đầu): [docs/demo-walkthrough.md](docs/demo-walkthrough.md)**
 

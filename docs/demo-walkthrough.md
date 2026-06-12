@@ -7,7 +7,7 @@ vận hành. Toàn bộ mất khoảng 30–60 phút, phần lớn là ngồi xe
 ## 0. Setup
 
 ```bash
-git clone <repo-url> && cd blockchain-template-harness-ai
+git clone <repo-url> && cd template-harness-ai-workflow
 docker info                 # Docker phải đang chạy
 node --version              # >= 20
 claude                      # mở Claude Code tại repo root
