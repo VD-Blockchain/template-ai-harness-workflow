@@ -52,9 +52,39 @@ CLAUDE.md                   ← luật của repo mà mọi agent phải theo
 ## Yêu cầu
 
 - [Claude Code](https://claude.com/claude-code) (CLI hoặc desktop app)
+- **Superpowers framework** (plugin của Claude Code) — xem mục cài đặt bên dưới
 - Docker Desktop (hoặc docker engine + compose v2)
 - Node.js ≥ 20 (cho frontend demo + Playwright)
 - git
+
+## Cài đặt Superpowers framework (BẮT BUỘC — làm trước tiên)
+
+Harness này được xây trên **Superpowers** — bộ plugin skill cho Claude Code. Các agent
+(Developer / DevOps / Tester) gọi trực tiếp skill `superpowers:test-driven-development`
+và `superpowers:systematic-debugging`, và `.claude/settings.json` của repo đã khai báo
+bật sẵn plugin `superpowers`. **Bạn phải cài plugin này TRƯỚC khi chạy bất kỳ lệnh
+`/brainstorm`, `/write-plan`, `/team-code-feature` nào** — nếu thiếu, agent sẽ không có
+skill và flow sẽ chạy sai.
+
+Mở Claude Code tại repo root, rồi chạy 2 lệnh sau (chỉ cần làm một lần cho mỗi máy):
+
+```
+/plugin marketplace add obra/superpowers-marketplace
+/plugin install superpowers@superpowers-marketplace
+```
+
+Kiểm tra đã cài thành công:
+
+```
+/plugin
+```
+
+→ trong danh sách phải thấy `superpowers` ở trạng thái **enabled**. Nếu Claude Code hỏi
+restart, hãy khởi động lại. Chỉ khi bước này xong mới chuyển sang Quickstart bên dưới.
+
+> [!NOTE]
+> Vì `.claude/settings.json` đã bật sẵn plugin, lần đầu mở repo Claude Code có thể tự
+> nhắc bạn enable `superpowers` — chấp nhận lời nhắc đó cũng tương đương 2 lệnh trên.
 
 ## Quickstart (5 phút)
 
@@ -63,6 +93,10 @@ git clone <repo-url> && cd template-harness-ai-workflow
 docker info        # docker phải đang chạy
 claude             # mở Claude Code tại repo root
 ```
+
+> [!IMPORTANT]
+> Chưa cài Superpowers? Quay lại mục **Cài đặt Superpowers framework** ở trên và cài xong
+> trước khi chạy các lệnh dưới đây.
 
 Trong Claude Code, chạy thử flow đầu tiên:
 
